@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+
+Vagrant.configure(2) do |config|
+
+    # LB Server
+    # config.vm.define "lb" do |lb|
+    #   lb.vm.box = "demo/centos79"        #centos/79
+    #   lb.vm.hostname = "lb.example.com"
+    #   lb.vm.network "private_network", ip: "172.42.42.8"
+    #   lb.vm.provider "virtualbox" do |v|
+    #     v.name = "lb"
+    #     v.memory = 1024
+    #     v.cpus = 1
+    #   end
+    # end
+
+  # Kubernetes Master Server
+  config.vm.define "kmaster1" do |kmaster1|
+    kmaster1.vm.box = "demo/centos79"        #centos/79
+    kmaster1.vm.hostname = "kmaster1.example.com"
+    kmaster1.vm.network "private_network", ip: "172.42.42.101"
+    kmaster1.vm.provider "virtualbox" do |v|
+      v.name = "kmaster1"
+      v.memory = 4096
+      v.cpus = 2
+    end
+    kmaster1.vm.provision "shell", path: "bootstrap_k8s_node.sh"
+    kmaster1.vm.provision "shell", path: "bootstrap_kmaster_with_calico.sh"
+    # kmaster1.vm.provision "shell", path: "bootstrap_kmaster_with_flannel.sh"
+  end
+
+  NodeCount = 3
+
+  # Kubernetes Worker Nodes
+  (1..NodeCount).each do |i|
+    config.vm.define "kworker#{i}" do |workernode|
+      workernode.vm.box = "demo/centos79"        #centos/79
+      workernode.vm.hostname = "kworker#{i}.example.com"
+      workernode.vm.network "private_network", ip: "172.42.42.20#{i}"
+      workernode.vm.provider "virtualbox" do |v|
+        v.name = "kworker#{i}"
+        v.memory = 4096
+        v.cpus = 4
+      end
+      workernode.vm.provision "shell", path: "bootstrap_k8s_node.sh"
+      workernode.vm.provision "shell", path: "bootstrap_kworker.sh"
+    end
+  end
+end

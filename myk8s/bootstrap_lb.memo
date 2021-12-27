@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+
+sudo yum install epel-release -y
+sudo yum install nginx -y
+
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+
+
+sudo yum install nginx-mod-stream
+# nginx -V  查看编译参数
+
+# copy the following in the bottom /etc/nginx/nginx.conf
+# https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-udp-load-balancer/
+stream {
+    upstream k8s {
+        server 172.42.42.101:6443;
+        server 172.42.42.102:6443;
+        server 172.42.42.103:6443;
+    }
+    server {
+        listen 6443;
+        proxy_timeout 20s;
+        proxy_pass k8s;
+    }
+}
+
+
+# create a file modify /etc/nginx/conf.d/k8s_front.conf
+    
+    upstream backend {
+      server 172.42.42.201:32080;
+      server 172.42.42.202:32080;
+    }
+
+    server {
+       listen 80;
+
+       location / {
+           proxy_set_header Host $host;
+           proxy_pass http://backend;
+       }
+    }
+
+

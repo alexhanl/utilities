@@ -1,0 +1,63 @@
+{
+  "builders": [
+    {
+      "CPUs": "{{user `vm-cpu-num`}}",
+      "RAM": "{{user `vm-mem-size`}}",
+      "RAM_reserve_all": false,
+      "boot_command": [
+        "<esc><wait>",
+        "linux ks=hd:fd0:/ks.cfg<enter>"
+      ],
+      "boot_order": "disk,cdrom,floppy",
+      "boot_wait": "10s",
+      "cluster": "{{user `vsphere-cluster`}}",
+      "convert_to_template": true,
+      "datacenter": "{{user `vsphere-datacenter`}}",
+      "datastore": "{{user `vsphere-datastore`}}",
+      "disk_controller_type": "pvscsi",
+      "floppy_files": [
+        "ks.cfg"
+      ],
+      "guest_os_type": "centos7_64Guest",
+      "insecure_connection": "true",
+      "iso_paths": [
+        "{{user `iso_url`}}"
+      ],
+      "network_adapters": [
+        {
+          "network": "{{user `vsphere-network`}}",
+          "network_card": "vmxnet3"
+        }
+      ],
+      "notes": "Build via Packer",
+      "password": "{{user `vsphere-password`}}",
+      "ssh_password": "server",
+      "ssh_username": "root",
+      "storage": [
+        {
+          "disk_size": "{{user `vm-disk-size`}}",
+          "disk_thin_provisioned": true
+        }
+      ],
+      "type": "vsphere-iso",
+      "username": "{{user `vsphere-user`}}",
+      "vcenter_server": "{{user `vsphere-server`}}",
+      "vm_name": "{{user `vm-name`}}"
+    }
+  ],
+  "variables": {
+    "iso_url": "[map-vol] ISO-Linux/CentOS-7-x86_64-DVD-2009.iso",
+    "vm-cpu-num": "2",
+    "vm-disk-size": "25600",
+    "vm-mem-size": "4096",
+    "vm-name": "CentOS7-Template",
+    "vsphere-cluster": "RegionA01-MGMT",
+    "vsphere-datacenter": "RegionA01",
+    "vsphere-datastore": "map-vol",
+    "vsphere-network": "VM Network",
+    "vsphere-password": "VMware1!",
+    "vsphere-server": "vcsa-01a.corp.local",
+    "vsphere-user": "administrator@vsphere.local"
+  }
+}
+

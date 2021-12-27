@@ -1,0 +1,6 @@
+myk8s/images/busybox.tar
+myk8s/images/calico-cni.tar
+myk8s/images/calico-kube-controllers.tar
+myk8s/images/calico-node.tar
+myk8s/images/calico-pod2daemon-flexvol.tar
+myk8s/images/nfs-subdir-external-provisioner-v4.0.2.tar

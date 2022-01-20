@@ -46,7 +46,7 @@
     }
   ],
   "variables": {
-    "iso_url": "[map-vol] ISO-Linux/CentOS-7-x86_64-DVD-2009.iso",
+    "iso_url": "[map-vol] ISO/CentOS-7-x86_64-DVD-2009.iso",
     "vm-cpu-num": "2",
     "vm-disk-size": "25600",
     "vm-mem-size": "4096",
@@ -56,7 +56,7 @@
     "vsphere-datastore": "map-vol",
     "vsphere-network": "VM Network",
     "vsphere-password": "VMware1!",
-    "vsphere-server": "vcsa-01a.corp.local",
+    "vsphere-server": "vcsa-01a.corp.tanzu",
     "vsphere-user": "administrator@vsphere.local"
   }
 }

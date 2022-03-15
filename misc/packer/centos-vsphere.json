@@ -31,7 +31,7 @@
       ],
       "notes": "Build via Packer",
       "password": "{{user `vsphere-password`}}",
-      "ssh_password": "server",
+      "ssh_password": "VMware1!",
       "ssh_username": "root",
       "storage": [
         {

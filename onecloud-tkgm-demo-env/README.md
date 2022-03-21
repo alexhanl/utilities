@@ -68,4 +68,21 @@ tanzu package install contour \
 
 ```
 
+## 更新插件
+https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-update-addons.html
 
+```bash
+kubectl get -n tkg-system secret tkg-mgmt-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d > mgmt-values.yaml
+
+kubectl get secret tkc-01-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d > tkc-01-antrea-values.yaml
+kubectl get secret tkc-01-antrea-addon -o yaml > tkc-01-antrea.yaml
+```
+cat tkc-01-antrea-values.yaml | base64 -w 0
+
+kubectl config use-context tkc-01-admin@tkc-01
+kubectl get cm -n kube-system antrea-config-822fk25299 -o yaml | grep Egress
+
+kill the pods to reload the new configuration
+
+
+imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea

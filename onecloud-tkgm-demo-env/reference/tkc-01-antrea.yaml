@@ -1,0 +1,28 @@
+apiVersion: v1
+data:
+  values.yaml: I0BkYXRhL3ZhbHVlcwojQG92ZXJsYXkvbWF0Y2gtY2hpbGQtZGVmYXVsdHMgbWlzc2luZ19vaz1UcnVlCi0tLQppbmZyYVByb3ZpZGVyOiB2c3BoZXJlCmFudHJlYToKICBjb25maWc6CiAgICBzZXJ2aWNlQ0lEUjogMTAwLjY0LjAuMC8xMwogICAgdHJhZmZpY0VuY2FwTW9kZTogZW5jYXAKICAgIG5vU05BVDogZmFsc2UKICAgIHRsc0NpcGhlclN1aXRlczogVExTX0VDREhFX0VDRFNBX1dJVEhfQUVTXzEyOF9HQ01fU0hBMjU2LFRMU19FQ0RIRV9SU0FfV0lUSF9BRVNfMTI4X0dDTV9TSEEyNTYsVExTX0VDREhFX1JTQV9XSVRIX0FFU18yNTZfR0NNX1NIQTM4NCxUTFNfRUNESEVfRUNEU0FfV0lUSF9BRVNfMjU2X0dDTV9TSEEzODQsVExTX1JTQV9XSVRIX0FFU18yNTZfR0NNX1NIQTM4NAogICAgZGlzYWJsZVVkcFR1bm5lbE9mZmxvYWQ6IGZhbHNlCiAgICBmZWF0dXJlR2F0ZXM6CiAgICAgIEFudHJlYVByb3h5OiB0cnVlCiAgICAgIEVuZHBvaW50U2xpY2U6IGZhbHNlCiAgICAgIEFudHJlYVBvbGljeTogdHJ1ZQogICAgICBOb2RlUG9ydExvY2FsOiBmYWxzZQogICAgICBBbnRyZWFUcmFjZWZsb3c6IHRydWUKICAgICAgRWdyZXNzOiB0cnVlCiAgaW1hZ2U6CiAgICByZXBvc2l0b3J5OiBwcm9qZWN0cy5yZWdpc3RyeS52bXdhcmUuY29tL3RrZwogICAgcGF0aDogYW50cmVhLWFkdmFuY2VkLWRlYmlhbgogICAgdGFnOiB2MS4yLjNfdm13YXJlLjQKICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAo=
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"values.yaml":"I0BkYXRhL3ZhbHVlcwojQG92ZXJsYXkvbWF0Y2gtY2hpbGQtZGVmYXVsdHMgbWlzc2luZ19vaz1UcnVlCi0tLQppbmZyYVByb3ZpZGVyOiB2c3BoZXJlCmFudHJlYToKICBjb25maWc6CiAgICBzZXJ2aWNlQ0lEUjogMTAwLjY0LjAuMC8xMwogICAgdHJhZmZpY0VuY2FwTW9kZTogZW5jYXAKICAgIG5vU05BVDogZmFsc2UKICAgIHRsc0NpcGhlclN1aXRlczogVExTX0VDREhFX0VDRFNBX1dJVEhfQUVTXzEyOF9HQ01fU0hBMjU2LFRMU19FQ0RIRV9SU0FfV0lUSF9BRVNfMTI4X0dDTV9TSEEyNTYsVExTX0VDREhFX1JTQV9XSVRIX0FFU18yNTZfR0NNX1NIQTM4NCxUTFNfRUNESEVfRUNEU0FfV0lUSF9BRVNfMjU2X0dDTV9TSEEzODQsVExTX1JTQV9XSVRIX0FFU18yNTZfR0NNX1NIQTM4NAogICAgZGlzYWJsZVVkcFR1bm5lbE9mZmxvYWQ6IGZhbHNlCiAgICBmZWF0dXJlR2F0ZXM6CiAgICAgIEFudHJlYVByb3h5OiB0cnVlCiAgICAgIEVuZHBvaW50U2xpY2U6IGZhbHNlCiAgICAgIEFudHJlYVBvbGljeTogdHJ1ZQogICAgICBOb2RlUG9ydExvY2FsOiBmYWxzZQogICAgICBBbnRyZWFUcmFjZWZsb3c6IHRydWUKICAgICAgRWdyZXNzOiB0cnVlCiAgaW1hZ2U6CiAgICByZXBvc2l0b3J5OiBwcm9qZWN0cy5yZWdpc3RyeS52bXdhcmUuY29tL3RrZwogICAgcGF0aDogYW50cmVhLWFkdmFuY2VkLWRlYmlhbgogICAgdGFnOiB2MS4yLjNfdm13YXJlLjQKICAgIHB1bGxQb2xpY3k6IElmTm90UHJlc2VudAo="},"kind":"Secret","metadata":{"annotations":{"tkg.tanzu.vmware.com/addon-type":"cni/antrea"},"creationTimestamp":"2022-03-17T03:29:24Z","finalizers":["tkg.tanzu.vmware.com/addon"],"labels":{"clusterctl.cluster.x-k8s.io/move":"","tkg.tanzu.vmware.com/addon-name":"antrea","tkg.tanzu.vmware.com/cluster-name":"tkc-01"},"name":"tkc-01-antrea-addon","namespace":"default","ownerReferences":[{"apiVersion":"cluster.x-k8s.io/v1beta1","blockOwnerDeletion":true,"controller":true,"kind":"Cluster","name":"tkc-01","uid":"a41dfc8d-21ee-40dc-a29f-1684f458a65d"}],"resourceVersion":"15742","uid":"c8efc0fe-dd05-4af8-bbcb-c6ff1b178237"},"type":"tkg.tanzu.vmware.com/addon"}
+    tkg.tanzu.vmware.com/addon-type: cni/antrea
+  creationTimestamp: "2022-03-17T03:29:24Z"
+  finalizers:
+  - tkg.tanzu.vmware.com/addon
+  labels:
+    clusterctl.cluster.x-k8s.io/move: ""
+    tkg.tanzu.vmware.com/addon-name: antrea
+    tkg.tanzu.vmware.com/cluster-name: tkc-01
+  name: tkc-01-antrea-addon
+  namespace: default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Cluster
+    name: tkc-01
+    uid: a41dfc8d-21ee-40dc-a29f-1684f458a65d
+  resourceVersion: "2517595"
+  uid: c8efc0fe-dd05-4af8-bbcb-c6ff1b178237
+type: tkg.tanzu.vmware.com/addon

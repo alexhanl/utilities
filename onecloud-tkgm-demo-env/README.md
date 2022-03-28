@@ -68,21 +68,54 @@ tanzu package install contour \
 
 ```
 
-## 更新插件
+## 更新插件 Antrea as an example， 以支持 antrea egress gateway 功能 (https://antrea.io/docs/v1.2.3/docs/egress/)
 https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-update-addons.html
+
+确保在 tkg-mgmt-admin@tkg-mgmt context 中：
+kubectl config use-context tkg-mgmt-admin@tkg-mgmt
+
 
 ```bash
 kubectl get -n tkg-system secret tkg-mgmt-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d > mgmt-values.yaml
 
-kubectl get secret tkc-01-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d > tkc-01-antrea-values.yaml
+kubectl get secret tkc-01-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d > tkc-01-antrea-data-values.yaml
 kubectl get secret tkc-01-antrea-addon -o yaml > tkc-01-antrea.yaml
+
+```
+
+修改 tkc-01-antrea-data-values.yaml，其中增加 "Egress: True", 然后将此文件内容进行base64 encoding，然后替换 tkc-01-antrea.yaml 相应部分, save as tkc-01-antrea-updated.yaml。 
 ```
 cat tkc-01-antrea-values.yaml | base64 -w 0
+```
+```
+kubectl apply -f tkc-01-antrea-updated.yaml
+```
 
-kubectl config use-context tkc-01-admin@tkc-01
-kubectl get cm -n kube-system antrea-config-822fk25299 -o yaml | grep Egress
+检查配置是否生效：
+1. 在 management cluster 中， 确认刚刚的修改已经生效
+```
+kubectl get secret tkc-01-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d 
+```
 
-kill the pods to reload the new configuration
+2. 在 workload cluster 中，确认 antrea-agent.conf 以及 antrea-controller.conf 中都包含 "Egress: True"
+```
+kubectl get configmap -n kube-system antrea-config-822fk25299 -o yaml 
+```
+
+3. kill the pods to reload the new configmap 
+kubectl get po -A | grep -i antrea
 
 
-imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea
+## TODO: external DNS
+
+
+tanzu package available get external-dns.tanzu.vmware.com/0.10.0+vmware.1-tkg.1 --values-schema
+
+## TODO: 天池
+
+## TODO: kubesphere for OIDC
+
+## TODO: pinniped
+
+## TODO: TMC
+

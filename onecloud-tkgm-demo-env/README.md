@@ -91,7 +91,7 @@ cat tkc-01-antrea-values.yaml | base64 -w 0
 kubectl apply -f tkc-01-antrea-updated.yaml
 ```
 
-检查配置是否生效：
+### 检查配置是否生效
 1. 在 management cluster 中， 确认刚刚的修改已经生效
 ```
 kubectl get secret tkc-01-antrea-addon -o jsonpath={.data.values\\.yaml} | base64 -d 
@@ -104,6 +104,11 @@ kubectl get configmap -n kube-system antrea-config-822fk25299 -o yaml
 
 3. kill the pods to reload the new configmap 
 kubectl get po -A | grep -i antrea
+
+### 验证Egress Gateway 功能，参考 reference/antrea-egress-gateway.yaml
+外部设置一个 avi 的 virtual service，设置 log 所有的 non-significant 日志。 
+创建一个curl pod， 然后进入Pod， 执行 curl http://192.168.220.7
+检查 avi 的 log，看到 client ip 为 192.168.130.140 的访问
 
 
 ## TODO: external DNS

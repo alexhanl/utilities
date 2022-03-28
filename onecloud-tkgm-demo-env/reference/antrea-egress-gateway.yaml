@@ -1,0 +1,29 @@
+---
+apiVersion: crd.antrea.io/v1alpha2
+kind: ExternalIPPool
+metadata:
+  name: egress-external-ip-pool
+spec:
+  ipRanges:
+  - start: 192.168.130.140
+    end: 192.168.130.150
+  - cidr: 192.168.130.0/24
+  nodeSelector: {}
+
+
+---
+apiVersion: crd.antrea.io/v1alpha2
+kind: Egress
+metadata:
+  name: egress-test-curl
+spec:
+  appliedTo:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: default
+    podSelector:
+      matchLabels:
+        run: curl
+  egressIP: 192.168.130.140 # can be populated by Antrea after assigning an IP from the pool below
+  externalIPPool: egress-external-ip-pool
+

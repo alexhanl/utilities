@@ -11,6 +11,9 @@ tanzu package installed get contour --namespace my-packages
 ```
 
 
+imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea
+
+imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea
 
 
 

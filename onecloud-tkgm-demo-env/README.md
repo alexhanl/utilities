@@ -5,8 +5,8 @@
 - https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-cli-reference.html
 
 ## 下载软件包
-1. 删除现有AVI中的 static routing 配置 （one cloud demo 环境中）
-2. 下载软件包 
+1. 删除现有AVI中的 static routing 配置 （仅限于 one cloud demo 环境中）
+2. 下载软件包: https://customerconnect.vmware.com/en/downloads/info/slug/infrastructure_operations_management/vmware_tanzu_kubernetes_grid/1_x
 
 ## 安装必要的工具
 ```bash
@@ -111,10 +111,20 @@ kubectl get po -A | grep -i antrea
 检查 avi 的 log，看到 client ip 为 192.168.130.140 的访问
 
 
-## TODO: external DNS
+## external-DNS
+https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/rfc2136.md
 
 
-tanzu package available get external-dns.tanzu.vmware.com/0.10.0+vmware.1-tkg.1 --values-schema
+yq -i eval '... comments=""' external-dns-data-values.yaml
+
+tanzu package install external-dns \
+--package-name external-dns.tanzu.vmware.com \
+--version 0.10.0+vmware.1-tkg.1 \
+--values-file external-dns-data-values.yaml \
+--namespace my-packages
+
+### TODO：Kerberos
+
 
 ## TODO: 天池
 
@@ -124,3 +134,9 @@ tanzu package available get external-dns.tanzu.vmware.com/0.10.0+vmware.1-tkg.1 
 
 ## TODO: TMC
 
+## Shared Services Cluster
+
+
+
+Deploy VMware Tanzu Packages from a private Container Registry  
+https://rguske.github.io/post/deploy-tanzu-packages-from-a-private-registry/

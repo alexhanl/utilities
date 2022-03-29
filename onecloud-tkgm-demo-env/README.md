@@ -126,7 +126,28 @@ tanzu package install external-dns \
 ### TODO：Kerberos
 
 
-## TODO: 天池
+## TODO: 天池 (暂时不支持 TKG 1.5)
+
+1. 增加DNS解析：map.corp.tanzu 192.168.110.23
+2. 部署天池
+    - 下载天池 ova image
+    - Deploy 天池 ova image，相关参数如下（没有提到的参数选择默认即可）：
+        - IP: 192.168.110.23/24
+        - Gateway: 192.168.110.1
+        - DNS: 192.168.110.10
+        - Hostname: map.corp.tanzu
+3. 配置天池
+    - 登录 http://map.corp.tanzu:8080 (admin/vmware)
+    - 配置 harbor 镜像仓库为：https://map.corp.tanzu  (admin/vmware)
+    - 配置 集群供应商 配置 map-harbor 的证书（导出证书时选择Base-64 Encoded） - 这一步非常重要！
+
+4. 准备镜像
+    - scp .\vmware_tanzu_map_dlc1-v0_8_3.tgz root@map.corp.tanzu:/root/vmware_tanzu_map_dlc1-v0_8_3.tgz
+    - tar -xaf vmware_tanzu_map_dlc1-v0_8_3.tgz
+    - cd dlc1
+    - ./setup
+
+VMware1!VMware1!
 
 ## TODO: kubesphere for OIDC
 

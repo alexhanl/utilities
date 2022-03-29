@@ -11,6 +11,12 @@ tanzu package installed get contour --namespace my-packages
 ```
 
 
+kubeconfig file location:  .kube-tkg/config
+
+tanzu management-cluster kubeconfig get --admin
+tanzu cluster kubeconfig get tkc-01 --admin
+
+
 imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea
 
 imgpkg pull -b projects.registry.vmware.com/tkg/packages/core/antrea:v1.2.3_vmware.4-tkg.1-advanced -o antrea

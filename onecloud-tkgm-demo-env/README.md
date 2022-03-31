@@ -69,7 +69,7 @@ tanzu package install contour \
 
 ```
 
-## 更新插件 Antrea as an example， 以支持 antrea egress gateway 功能 (https://antrea.io/docs/v1.2.3/docs/egress/)
+## 更新插件 - Antrea as an example， 以支持 antrea egress gateway 功能 (https://antrea.io/docs/v1.2.3/docs/egress/)
 https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-update-addons.html
 
 确保在 tkg-mgmt-admin@tkg-mgmt context 中：
@@ -150,12 +150,14 @@ tanzu package install external-dns \
 VMware1!VMware1!
 
 ## different k8s versions support
-
+上传 相关 OVA base image
 tanzu kubernetes-release get: list all releases
 tanzu kubernetes-release get v1.22.5: list all releases matching v1.22.5
 tanzu kubernetes-release get v1.22.5+vmware.1: list the v1.22.5+vmware.1 release
 
 tanzu cluster create tkc-02 --tkr v1.20.14---vmware.1-tkg.4 -f tkc-02.yaml
+
+## KubeSphere
 
 
 ## TODO: Shared Services Cluster

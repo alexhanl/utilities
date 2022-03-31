@@ -3,6 +3,7 @@
 ## Reference
 - https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-index.html
 - https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-cli-reference.html
+- https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-config-reference.html
 
 ## 下载软件包
 1. 删除现有AVI中的 static routing 配置 （仅限于 one cloud demo 环境中）
@@ -148,13 +149,19 @@ tanzu package install external-dns \
 
 VMware1!VMware1!
 
+## different k8s versions support
+
+## TODO: Shared Services Cluster
+tanzu cluster create tkg-services -f tkg-services.yaml
+
+
 ## TODO: kubesphere for OIDC
 
 ## TODO: pinniped
 
 ## TODO: TMC
 
-## Shared Services Cluster
+
 
 
 

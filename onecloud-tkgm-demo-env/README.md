@@ -151,6 +151,13 @@ VMware1!VMware1!
 
 ## different k8s versions support
 
+tanzu kubernetes-release get: list all releases
+tanzu kubernetes-release get v1.22.5: list all releases matching v1.22.5
+tanzu kubernetes-release get v1.22.5+vmware.1: list the v1.22.5+vmware.1 release
+
+tanzu cluster create tkc-02 --tkr v1.20.14---vmware.1-tkg.4 -f tkc-02.yaml
+
+
 ## TODO: Shared Services Cluster
 tanzu cluster create tkg-services -f tkg-services.yaml
 

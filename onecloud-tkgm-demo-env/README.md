@@ -160,8 +160,24 @@ tanzu cluster create tkc-02 --tkr v1.20.14---vmware.1-tkg.4 -f tkc-02.yaml
 ## KubeSphere
 
 
-## TODO: Shared Services Cluster
+## Shared Services Cluster
+https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-user-managed-index.html#shared
+
 tanzu cluster create tkg-services -f tkg-services.yaml
+kubectl config use-context tkg-mgmt-admin@tkg-mgmt
+kubectl label cluster.cluster.x-k8s.io/tkg-services cluster-role.tkg.tanzu.vmware.com/tanzu-services="" --overwrite=true
+tanzu cluster list --include-management-cluster
+
+tanzu cluster kubeconfig get tkg-services --admin
+kubectl config use-context tkg-services-admin@tkg-services
+
+## harbor
+https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-harbor-registry.html#deploy-harbor-into-a-cluster-5
+
+tanzu package available list harbor.tanzu.vmware.com -A
+image_url=$(kubectl -n tanzu-package-repo-global get packages harbor.tanzu.vmware.com.2.3.3+vmware.1-tkg.1 -o jsonpath='{.spec.template.spec.fetch[0].imgpkgBundle.image}')
+imgpkg pull -b $image_url -o /tmp/harbor-package-2.3.3+vmware.1-tkg.1
+cp /tmp/harbor-package-2.3.3+vmware.1-tkg.1/config/values.yaml harbor-data-values.yaml
 
 
 ## TODO: kubesphere for OIDC
@@ -170,8 +186,11 @@ tanzu cluster create tkg-services -f tkg-services.yaml
 
 ## TODO: TMC
 
+## TODO: prometheus and grafana and vrops
 
+## TODO: loginsight
 
+## TODO: velero and DR
 
 
 Deploy VMware Tanzu Packages from a private Container Registry  

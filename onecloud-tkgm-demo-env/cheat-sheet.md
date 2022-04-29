@@ -56,3 +56,56 @@ ubuntu@cli-vm:~$ tanzu package available list -A
 ubuntu@cli-vm:~$
 
 ```
+
+
+
+[edit]
+vyos@vyos# show service dhcp-server
+ shared-network-name K8s-Workload {
+     authoritative
+     subnet 192.168.130.0/24 {
+         default-router 192.168.130.1
+         dns-server 192.168.110.10
+         domain-name corp.tanzu
+         lease 864000
+         range 0 {
+             start 192.168.130.155
+             stop 192.168.130.254
+         }
+     }
+ }
+ shared-network-name LAN {
+     authoritative
+     subnet 192.168.100.0/24 {
+         default-router 192.168.100.1
+         dns-server 192.168.110.10
+         domain-name corp.tanzu
+         lease 864000
+         range 0 {
+             start 192.168.100.100
+             stop 192.168.100.250
+         }
+     }
+ }
+
+
+
+
+# Retrieve the Data Values Template
+
+https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-user-managed-index.html#retrieve-the-data-values-template-8
+
+tanzu package available list -A
+
+tanzu package available list PACKAGE-NAME -A
+
+image_url=$(kubectl -n tanzu-package-repo-global get packages fluent-bit.tanzu.vmware.com.PACKAGE-VERSION -o jsonpath='{.spec.template.spec.fetch[0].imgpkgBundle.image}')
+
+$ echo $image_url
+projects.registry.vmware.com/tkg/packages/standard/fluent-bit@sha256:c83d038c57f244aae2819dd77dc5184bb3e1ec96524d3f6a09fe8a244b7bc9e4
+
+imgpkg pull -b $image_url -o PACKAGE-DIR
+
+cp /tmp/fluentbit/config/values.yaml fluent-bit-data-values.yaml
+
+tanzu package available get harbor.tanzu.vmware.com/AVAILABLE-VERSION --values-schema

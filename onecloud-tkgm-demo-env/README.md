@@ -192,6 +192,8 @@ cp /tmp/harbor-package-2.3.3+vmware.1-tkg.1/config/values.yaml harbor-data-value
 
 ## TODO: velero and DR
 
+## TODO：multus
+
 
 Deploy VMware Tanzu Packages from a private Container Registry  
 https://rguske.github.io/post/deploy-tanzu-packages-from-a-private-registry/

@@ -191,6 +191,30 @@ cp /tmp/harbor-package-2.3.3+vmware.1-tkg.1/config/values.yaml harbor-data-value
 ## TODO: loginsight
 
 ## TODO: velero and DR
+Reference: 
+- https://velero.io/docs/v1.8/contributions/minio/
+- https://github.com/vmware-tanzu/velero-plugin-for-vsphere
+- https://velero.io/docs/v1.8/restic/#install-restic
+
+velero install \
+    --image ghcr.io/alexhanl/velero/velero:v1.8.1  \
+    --provider aws \
+    --plugins ghcr.io/alexhanl/velero/velero-plugin-for-aws:v1.4.1 \
+    --bucket velero \
+    --secret-file ./credentials-velero \
+    --use-volume-snapshots false \
+    --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://truenas.corp.tanzu:9000 \
+    --use-restic \
+    --default-volumes-to-restic true 
+
+
+
+
+注意velero和aws plugin 的版本对应：https://github.com/vmware-tanzu/velero-plugin-for-aws#compatibility
+
+velero backup create nginx-with-pv-backup-001 --snapshot-volumes=true --include-namespaces test
+
+velero restore create --from-backup nginx-with-pv-backup-001
 
 ## TODO：multus
 

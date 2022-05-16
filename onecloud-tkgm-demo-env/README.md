@@ -190,7 +190,7 @@ cp /tmp/harbor-package-2.3.3+vmware.1-tkg.1/config/values.yaml harbor-data-value
 
 ## TODO: loginsight
 
-## TODO: velero and DR
+## velero and DR
 Reference: 
 - https://velero.io/docs/v1.8/contributions/minio/
 - https://github.com/vmware-tanzu/velero-plugin-for-vsphere
@@ -206,8 +206,10 @@ velero install \
     --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://truenas.corp.tanzu:9000 \
     --use-restic \
     --default-volumes-to-restic true 
-
-
+   
+   
+   https://velero.io/docs/v1.8/self-signed-certificates/
+    
 
 
 注意velero和aws plugin 的版本对应：https://github.com/vmware-tanzu/velero-plugin-for-aws#compatibility
@@ -215,6 +217,22 @@ velero install \
 velero backup create nginx-with-pv-backup-001 --snapshot-volumes=true --include-namespaces test
 
 velero restore create --from-backup nginx-with-pv-backup-001
+
+
+
+velero annotation and samples: https://github.com/vmware-tanzu/velero/blob/main/examples/nginx-app/with-pv.yaml
+
+    metadata:
+      labels:
+        app: nginx
+      annotations:
+        pre.hook.backup.velero.io/container: fsfreeze
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/log/nginx"]'
+        post.hook.backup.velero.io/container: fsfreeze
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]' 
+
+
+### DB backup        
 
 ## TODO：multus
 

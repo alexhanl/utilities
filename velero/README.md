@@ -1,7 +1,7 @@
 # 集成 Velero 实现 VMware Tanzu Kubernetes Grid 的数据保护
 
 
-## 基于 Velero 的 K8s 数据保护简介 
+## 1. 基于 Velero 的 K8s 数据保护简介 
 [Velero](https://velero.io/) 是一个开源的 Kubernetes 数据保护工具。 
 
 在 Kubernetes 中，需要保护的数据主要包括两种类型："Resource" 和 "PersistentVolume"（PV）。 其中 "Resource" 包括 Deployment, Pod, Service, Ingress 等等，这些在 Kuberentes 中通常以 YAML 或者 JSON 文件形式描述。 "PersistentVolume" 也是一个K8s对象，通常存放的用户数据，比如数据库文件。 
@@ -21,7 +21,7 @@
 
 在本文中，我们介绍使用 Velero 结合 Velero vSphere Plugin 来实现 K8s 的数据保护。 以下的所有的操作基于 Tanzu Kubernetes Grid 1.4 workload cluster, Velero v1.8.1，以及 velero-plugin-for-vsphere v1.3.1。
 
-## TKG 测试环境
+## 2. TKG 测试环境
 本次测试环境是用 TKG 1.4，其中包含 1个 management cluster，2个 workload clusters(tkc-01, tkc-02).  我们使用 tkc-01 作为本次测试的 vanilla kubernetes cluster。 tkc-01中包含一个master node和4个worker nodes。 TKG K8s cluster 使用 NSX Advanced Load Balancer 作为 Cloud Provider 提供 K8s LoadBalancer 的服务。 
 
 ![lab env](img/lab-env.png)
@@ -37,7 +37,7 @@ tkc-01-md-0-78fc885d47-njtd4   Ready    <none>                 69d   v1.22.5+vmw
 tkc-01-md-0-78fc885d47-qzlbl   Ready    <none>                 24d   v1.22.5+vmware.1
 ```
 
-## 示例应用介绍
+## 3. 示例应用介绍
 本次测试使用 Nginx。大家可以参考 nginx-with-pv.yaml。其中，我们把 /usr/share/nginx/html 目录mount到一个 PV 中。 这个PV就是我们需要备份的对象之一。 我们稍后会修改 /usr/share/nginx/html 中的 index.html 文件， 来模拟数据的变化。  我们创建 namespace test， 用来部署这个示例应用。 
 
 在部署完成之后，我们可以看到在test namespace中，有一个 deployment 对应一个replicaset以及一个pod；另外有一个LoadBalancer 类型的Service，EXTERNAL-IP为192.168.220.15（在实际环境中，这个IP地址可能不一样的）。 
@@ -79,7 +79,7 @@ ubuntu@cli-vm:~/myvelero$ curl http://192.168.220.15
 hello world 001
 ```
 
-## Velero 部署架构
+## 4. Velero 部署架构
 
 下面我们介绍一下 Velero 的系统架构：
 
@@ -95,7 +95,7 @@ hello world 001
 
 如果您对 vSphere with Tanzu 不太熟悉，也不要紧。为了更好的兼容性，在本文中，我们使用 Vanilla vSphere Plugin 部署模式。 
 
-## Velero w/ vSphere Plugin 安装部署
+## 5. Velero with vSphere Plugin 安装部署
 
 我们使用 Velero install 命令还部署 velero server。 
 
@@ -147,7 +147,7 @@ datamgr-for-vsphere-plugin   4         4         4       4            4         
 
 ```
 
-## 功能验证
+## 6. 功能验证
 
 velero 支持单次任务备份，也支持计划任务。 我们先看一个简单的单次任务备份和恢复。 
 
@@ -214,7 +214,7 @@ ubuntu@cli-vm:~/myvelero$ curl http://192.168.220.15
 hello world 001
 ```
 
-## 进一步的功能验证
+## 7. 进一步的功能验证
 
 后续大家可以基于此，进行更多的场景/应用的验证，我把相应的文档和建议也放到下面：
 - 基于 label 和 resource 类型的过滤：https://velero.io/docs/v1.8/resource-filtering/
@@ -223,6 +223,6 @@ hello world 001
 
 
 
-## 参考资料
+## 8. 参考资料
 https://velero.io/docs/v1.8/
 https://github.com/vmware-tanzu/velero-plugin-for-vsphere

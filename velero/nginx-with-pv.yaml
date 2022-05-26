@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1 # tells deployment to run 1 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: nginx-html-content
+            readOnly: false
+      volumes:
+      - name: nginx-html-content
+        persistentVolumeClaim:
+          claimName: nginx-html-content
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nginx-html-content
+  labels:
+    app: nginx
+spec:
+  # Optional:
+  # storageClassName: <YOUR_STORAGE_CLASS_NAME> 
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer
+  ports:
+  - name: nginx
+    protocol: TCP
+    port: 80
+    targetPort: 80

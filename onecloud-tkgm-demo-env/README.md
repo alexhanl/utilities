@@ -195,6 +195,8 @@ Reference:
 - https://velero.io/docs/v1.8/contributions/minio/
 - https://github.com/vmware-tanzu/velero-plugin-for-vsphere
 - https://velero.io/docs/v1.8/restic/#install-restic
+- https://www.youtube.com/watch?v=bmsMB3sRokI
+- https://k8up.io/k8up/
 
 velero install \
     --image ghcr.io/alexhanl/velero/velero:v1.8.1  \
@@ -232,7 +234,51 @@ velero annotation and samples: https://github.com/vmware-tanzu/velero/blob/main/
         post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/log/nginx"]' 
 
 
+
+### Install with vanilla vSphere plugin
+
+velero install \
+    --image ghcr.io/alexhanl/velero/velero:v1.8.1  \
+    --provider aws \
+    --plugins ghcr.io/alexhanl/velero/velero-plugin-for-aws:v1.4.1 \
+    --bucket velero \
+    --secret-file ./credentials-velero \
+    --use-volume-snapshots false \
+    --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://truenas.corp.tanzu:9000 \
+    --snapshot-location-config region=minio
+
+# --snapshot-location-config region=minio 本参数是为了对应一个issue：https://github.com/vmware-tanzu/velero/issues/3530
+
+kubectl -n velero create secret generic velero-vsphere-config-secret --from-file=csi-vsphere.conf
+
+
+
+velero snapshot-location create minio-local \
+    --provider aws \
+    --config region=minio
+
+
+
+<!-- docker pull vsphereveleroplugin/velero-plugin-for-vsphere:v1.3.1
+docker pull vsphereveleroplugin/backup-driver:v1.3.1
+docker pull vsphereveleroplugin/data-manager-for-plugin:v1.3.1
+
+docker tag vsphereveleroplugin/velero-plugin-for-vsphere:v1.3.1 ghcr.io/alexhanl/vsphereveleroplugin/velero-plugin-for-vsphere:v1.3.1
+docker tag vsphereveleroplugin/backup-driver:v1.3.1 ghcr.io/alexhanl/vsphereveleroplugin/backup-driver:v1.3.1
+docker tag vsphereveleroplugin/data-manager-for-plugin:v1.3.1 ghcr.io/alexhanl/vsphereveleroplugin/data-manager-for-plugin:v1.3.1
+
+docker push ghcr.io/alexhanl/vsphereveleroplugin/velero-plugin-for-vsphere:v1.3.1
+docker push ghcr.io/alexhanl/vsphereveleroplugin/backup-driver:v1.3.1
+docker push ghcr.io/alexhanl/vsphereveleroplugin/data-manager-for-plugin:v1.3.1 -->
+
+velero plugin add ghcr.io/alexhanl/vsphereveleroplugin/velero-plugin-for-vsphere:v1.3.1
+
+velero backup create nginx-backup-10 --include-namespaces test --volume-snapshot-locations minio-local
+velero restore create --from-backup nginx-backup-01
+
+
 ### DB backup        
+
 
 ## TODO：multus
 

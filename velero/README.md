@@ -224,5 +224,5 @@ hello world 001
 
 
 ## 8. 参考资料
-https://velero.io/docs/v1.8/
-https://github.com/vmware-tanzu/velero-plugin-for-vsphere
+- https://velero.io/docs/v1.8/
+- https://github.com/vmware-tanzu/velero-plugin-for-vsphere

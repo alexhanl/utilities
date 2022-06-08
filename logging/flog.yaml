@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flog
+spec:
+  selector:
+    matchLabels:
+      app: flog
+  replicas: 2 
+  template:
+    metadata:
+      labels:
+        app: flog
+    spec:
+      containers:
+      - name: flog
+        image: mingrammer/flog
+        command: ["flog"]
+        args: ["-f", "json", "-d", "1s", "-l"]
+

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  apache-sample
+  labels:
+    app:  apache-sample
+spec:
+  selector:
+    matchLabels:
+      app: apache-sample
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app:  apache-sample
+    spec:
+      containers:
+      - name:  apache-sample
+        image:  httpd:latest
+        ports:
+        - containerPort:  80
+          name:  apache-sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-sample
+  namespace: default
+spec:
+  selector:
+    app: apache-sample
+  type: LoadBalancer
+  ports:
+  - name: apache-sample
+    protocol: TCP
+    port: 80
+    targetPort: 80

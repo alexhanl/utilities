@@ -1,23 +1,26 @@
 # 谈谈容器环境的日志管理 和 vRealize Log Insight
 
+## 摘要
+”日志管理“ 是基于 Kubernetes 的现代化应用平台不可缺少的组件。 本文主要介绍了日志管理的概念，以及VMware vRealize Log Insight 如何集成 Fluent-Bit，实现对于 K8s 的日志的管理。 
+
 ## 1. 为什么需要集中的 K8s 日志平台
 
 ### 1.1 日志的使用场景
 日志在 IT 运维管理中一直是一个很重要的方面，通常来说，主要包括以下两个使用场景：
 
-1. 排错：日志包含详细的问题现场，可以看到发生问题的前后，系统到底发生了什么事情。 当一个问题发生的时候，通常还需要查看这个问题的影响范围，发生的频率等等。 这边需要额外说明一下：虽然说，在k8s的理念中，当发生问题的时候，通常不鼓励去排错，而是通过删掉重建的方式来解决；但是在实际场景中，即使重建，某些问题也可能重复的出现；或者是有状态的应用或者配置的问题，无法通过删除重建来解决。  
+1. **排错**：日志包含详细的问题现场，可以看到发生问题的前后，系统到底发生了什么事情。 另外，当问题发生时，通常还需要查看这个问题的影响范围，发生的频率等等。 这边需要额外说明一下：虽然说，在k8s的理念中，当发生问题的时候，通常不鼓励去排错，而是通过删掉重建的方式来解决；但是在实际场景中，即使重建，某些问题也可能重复的出现；或者是有状态的应用或者配置的问题，无法通过删除重建来解决。  
 
-2. 指标：通过日志，我们可以统计一些IT和业务的指标，比如状态码为 500 的HTTP Response的数量。 
+2. **指标**：通过日志，我们可以统计一些IT和业务的指标，比如状态码为 500 的HTTP Response的数量。 
 
-3. 告警：我们可以监控日志中的关键信息，比如 Critical 级别的日志，或者 HTTP 500 的数量大于某个阈值。
+3. **告警**：我们可以监控日志中的关键信息，比如 Critical 级别的日志，或者 HTTP 500 的数量大于某个阈值。
 
-日志可能来自于平台或者应用。 IT 基础设施团队更加关心平台日志，而应用团队更加关心应用日志。 作为基础设施部门，构建一个完整的现代化应用平台，应当包含日志组件。
+日志可能来自于平台或者应用。 IT 基础设施团队更加关心平台日志，而应用团队更加关心应用日志。 作为基础设施部门，当构建一个完整的现代化应用平台，应当包含日志组件。
 
 ### 1.2 为什么需要集中的日志平台
 
 所有的系统都会在本地写日志文件，或者打印到 "标准输出(stdout)"和"标准错误(stderr)"。很多的管理员在发现故障的时候，都会登录到系统去查看日志。 当然，最常见的方法，就是 `cat xxxx.log | grep -i yyyy` 这样的命令。 当然，这样的方法在传统的平台上排错，似乎也未尝不可。 但是在 K8s 平台之下，这种方法会遇到两方面的挑战：
 
-1. Pod 已经被 terminate 掉了：K8s 平台管理的 pod 的方式是，当 pod 出问题的时候，pod 就会被 terminate掉，然后创建新的 pod 来替代它。 但是，对于排错来说，当一个 pod 已经被 terminate 掉的时候， 我们是无法通过 `kubectl logs <pod_name>` 这样的命令去查看 pod 日志的。 但是如果使用集中日志平台，所有的日志都会被转发到平台，保存起来以供日后查询。   
+1. Pod 已经被 terminate 掉了：K8s 平台管理的 pod 的方式是，当 pod 出问题的时候，pod 就会被 K8s 平台自动 terminate 掉，然后创建新的 pod 来替代它。 但是，对于排错来说，当一个 pod 已经被 terminate 掉的时候， 我们是无法通过 `kubectl logs <pod_name>` 这样的命令去查看 pod 日志的。 而如果使用集中日志平台，所有的日志都会被转发到平台，方便日后查询。   
 
 2. 不知道查看哪个 Pod：在 K8s 中，一个 deployment 包含一组一样的 pod，service 通过负载均衡把请求分发到各个 pod。 当发生故障的时候，其实，并不一定有明确的信息能够知道到底是哪个 pod 出了问题。 难道我们要一个 pod 一个 pod 的去查看吗？ 集中日志平台可以提供搜索功能来解决这样的问题。 
 
@@ -43,21 +46,21 @@ IT 基础设施团队需要一个集中日志平台来管理 K8s 平台的日志
 本文将要介绍的 VMware vRealize Log Insight 这款 VMware 发布的日志管理平台，可能听说过用户不多；似乎 VMware 官方也没有花太多的力气去宣传和推广这个产品。 事实上，这个产品已经出现很多年了。近期，在和一些用户的 IT 基础设施部门讨论现代化应用平台的构建时候，用户反馈这个产品其实很好。 我开始有些好奇，但是讨论之后，发现其实是有道理的。
 
 ### 2.2 vRealize Log Insight 的优势
-VMware vRealize Log Insight 可以满足日志的管理的常见需求，并且在以下几个方面有一定的优势：
+VMware vRealize Log Insight 可以满足日志管理的常见需求，并且在以下几个方面具有一定的优势：
 
-1. 很多 VMware 的用户已经有了的产品的授权和技术支持： 事实上，很多用户在采购的过程中，为了方便和获得更好的折扣，采购的都是套件，最常见的比如vRealize Suite 或者 vCloud Suite，或者 VMware Cloud Foundation。 事实上，这些套件中都已经包含 vRealize Log Insight 这个产品的授权。 当然，拥有这些合法授权的用户，都可以通过电话或者邮件获得 VMware 官方的远程技术支持。 
+1. **很多 VMware 的用户已经有了的产品的授权和技术支持**： 事实上，很多用户在采购的过程中，为了方便和获得更好的折扣，采购的都是套件，最常见的比如vRealize Suite 或者 vCloud Suite，或者 VMware Cloud Foundation。 事实上，这些套件中都已经包含 vRealize Log Insight 这个产品的授权。 当然，拥有这些合法授权的用户，都可以通过电话或者邮件获得 VMware 官方的远程技术支持。 
 
 ![packaging](images/packaging.png)
 
 如果您使用的是VMware Tanzu Kubernetes Grid，其中的包含fluent-bit的授权，fluent-bit是一个日志采集的agent。 所以，您可以获得整个解决方案中从日志采集到日志分析管理平台的整体方案的授权和技术支持。 
 ![fluentbit](images/fluentbit.png)
 
-2. 运维简单：秉承 VMware 产品的设计惯例，vRealize Log Insight 的安装配置只需要导入一个 OVF/OVA 文件即可。 在资源不足需要扩展的时候，通过部署另一个实例，并可以实现集群的横向扩展。 
+2. **运维简单**：秉承 VMware 产品的设计惯例，vRealize Log Insight 的安装配置只需要导入一个 OVF/OVA 文件即可。 在资源不足需要扩展的时候，通过部署另一个实例，即可以实现集群的横向扩展。 
 
-3. 统一的日志管理平台：在构建一个完整的现代化应用平台中，K8s 需要计算、存储和网络资源池。 如果您使用的是 VMware 的 vSphere,vSAN，NSX, 我们完全可以通过统一的平台来采集 vSphere、vSAN、NSX 的平台日志，这样结合 K8s 的日志，我们可以更好的进行关联排错。 
+3. **统一的 IT 基础设施日志管理平台**：在构建一个完整的现代化应用平台中，K8s 需要计算、存储和网络资源池。 如果您使用的是 VMware 的 vSphere,vSAN，NSX, 我们完全可以通过统一的平台来采集 vSphere、vSAN、NSX 的平台日志，这样结合 K8s 的日志，我们可以更好的进行关联排错。 
 
 ## 3. 使用 vRealize Log Insight 体验日志管理
-我们下面简单的体验一下如何通过vRealize Log Insight 实现 Tanzu Kubernetes Grid 的日志管理。 
+我们下面简单体验一下如何通过vRealize Log Insight 实现 Tanzu Kubernetes Grid 的日志管理。 
 
 ### 3.1 实验环境
 ![lab-architecture](images/lab-architecture.png)
@@ -91,7 +94,7 @@ spec:
         args: ["-f", "json", "-d", "1s", "-l"]
 ```
 
-我们可以简单的通过 kubectl logs 查看一下输出的日志格式：
+我们可以通过 kubectl logs 查看一下输出的日志格式：
 
 ``` bash
 [hanliang@jump-centos logging]$ kubectl logs flog-85b7f6466c-gzkwj | tail -n 5
@@ -131,7 +134,7 @@ pod/log-collector-z6qbw   1/1     Running   0          32h   172.21.0.9   hr-pro
 在下图中，我们使用 `"k8s_app 包含 flog"`, `"text 包含 status:500"` 这样的筛选器，得到下面的日志。 在截图上半部分的柱状图，我们也可以看到日志数量的变化趋势。 
 ![search-log](images/search-log.png)
 
-点击下面单个事件最左边的齿轮图标，然后选择 “在环境中查看事件“（如下图所示），我们就可以看到此事件前后生成的日志，便于管理员排错。 
+点击下面单个事件最左边的齿轮图标，然后选择 “在环境中查看事件“（如下图所示），我们就可以看到此事件前后生成的日志，便于管理员排错时了解前后都发生了什么事情。 
 ![launching-in-context](images/launching-in-context.png)
 
 其中，粉红色的日志为前文中为锚点的日志条目。 
@@ -145,7 +148,9 @@ vRealize Log Insight 提供了丰富的日志分析和管理功能，大家可�
 3. vRealize Log Insight 集群的横向扩展：https://docs.vmware.com/cn/vRealize-Log-Insight/8.8/com.vmware.log-insight.administration.doc/GUID-B793B5C7-C856-4324-8202-EBB35265BA7B.html
 
 ## 4. 总结
-”日志管理“ 是基于 Kubernetes 的现代化应用平台不可缺少的组件。 本文主要介绍了 VMware vRealize Log Insight 如何集成 Fluent-Bit，实现对于 K8s 的日志的管理。 
+”日志管理“ 是基于 Kubernetes 的现代化应用平台不可缺少的组件。 本文主要介绍了日志管理的概念，以及VMware vRealize Log Insight 如何集成 Fluent-Bit，实现对于 K8s 的日志的管理。 
+
+在销售模式上，vRealize Log Insight 通常包含在 VMware 的一些常见套件中。您不妨看一下您已经采购的 VMware 软件授权，也许您已经拥有了 vRealize Log Insight 的授权，为什么不试一下呢？ 
 
 ## 5. 参考资料
 - https://docs.vmware.com/cn/vRealize-Log-Insight/index.html

@@ -148,7 +148,7 @@ vRealize Log Insight 提供了丰富的日志分析和管理功能，大家可�
 3. vRealize Log Insight 集群的横向扩展：https://docs.vmware.com/cn/vRealize-Log-Insight/8.8/com.vmware.log-insight.administration.doc/GUID-B793B5C7-C856-4324-8202-EBB35265BA7B.html
 
 ## 4. 总结
-”日志管理“ 是基于 Kubernetes 的现代化应用平台不可缺少的组件。 本文主要介绍了日志管理的概念，以及VMware vRealize Log Insight 如何集成 Fluent-Bit，实现对于 K8s 的日志的管理。 
+"日志管理" 是基于 Kubernetes 的现代化应用平台不可缺少的组件。 本文主要介绍了日志管理的概念，以及VMware vRealize Log Insight 如何集成 Fluent-Bit，实现对于 K8s 的日志的管理。 
 
 在销售模式上，vRealize Log Insight 通常包含在 VMware 的一些常见套件中。您不妨看一下您已经采购的 VMware 软件授权，也许您已经拥有了 vRealize Log Insight 的授权，为什么不试一下呢？ 
 
